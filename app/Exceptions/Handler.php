@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Exceptions;
-
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;   
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+
 
 class Handler extends ExceptionHandler
 {
@@ -38,4 +40,20 @@ class Handler extends ExceptionHandler
             //
         });
     }
+    //added by navid
+    public function render($request, Throwable $exception)
+{
+    if (Request::is('http://127.0.0.1:8000/*')) {
+        $message = get_class($exception) . ":: message: " . $exception->getMessage();       
+        return Redirect::back()->withErrors(['msg' =>$message]);
+    }
+
+    return parent::render($request, $exception);
+}
+
+
+
+    
+  
+
 }

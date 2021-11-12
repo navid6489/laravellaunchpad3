@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Providers\AccountApproved;
 use DB;
 class teachercontroller extends Controller
 {
@@ -69,8 +70,13 @@ class teachercontroller extends Controller
         $num=1;
 
         //$result= DB::insert("insert into adminrequests ( name, email, password, roletype, dp, address, currentschool, previousschool, parentsdetails, experienceinyears, expertiseinsubjects,flag) values ('$name','$email','$password','$roleflag', '$filename', '$address', '$currentschool', '$previousschool', '$parentsdetails', '$experienceinyears','$expertiseinsubjects',0)");
-        $result=DB::update("update adminrequests set flag='$num' where id=$id");
+        $result=DB::update("update users set flag='$num' where id=$id");
         //dd(DB::getQueryLog());
+        if($result!=0)
+        {
+          event(new AccountApproved($id));
+         
+        }
           
         return response($result);
         } catch (\Exception $e) {

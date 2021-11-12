@@ -33,11 +33,11 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        $teacherrequests =  DB::select("SELECT * from adminrequests where flag=0 and roletype='teacher'");
-        $studentrequests =  DB::select("SELECT * from adminrequests where flag=0 and roletype='student'");
+       // $teacherrequests =  DB::select("SELECT * from adminrequests where flag=0 and roletype='teacher'");
+       // $studentrequests =  DB::select("SELECT * from adminrequests where flag=0 and roletype='student'");
         //dd($studentrequests);
         //return redirect()->intended(RouteServiceProvider::HOME)->with( ['studentrequests' => $studentrequests] );
-        return view('dashboard')->with(compact('teacherrequests','studentrequests'));
+        return view('dashboard');
     }
 
     /**

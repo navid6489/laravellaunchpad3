@@ -1,22 +1,22 @@
 
  @php
- if(Auth::user()->roletype=='student')
+ if(Auth::user()->role=='student')
  {
     $id=Auth::user()->id;
-    $studentrequests =  DB::select("SELECT * from adminrequests where roletype='student' and id='$id'");
+    $studentrequests =  DB::select("SELECT * from users where role='student' and id='$id'");
  }
- else if(Auth::user()->roletype=='teacher')
+ else if(Auth::user()->role=='teacher')
  {
     $id=Auth::user()->id;
-    $teacherrequests =  DB::select("SELECT * from adminrequests where roletype='teacher' and id='$id' ");
+    $teacherrequests =  DB::select("SELECT * from users where role='teacher' and id='$id' ");
  }
- else if(Auth::user()->roletype=='admin')
+ else if(Auth::user()->role=='admin')
  {
     $id=Auth::user()->id;
-    $countstud= DB::select("SELECT COUNT(*) as cnt_data from adminrequests where flag=0 and roletype='student'");
-    $studentrequests =  DB::select("SELECT * from adminrequests where flag=0 and roletype='student'");
-    $countteacher= DB::select("SELECT COUNT(*) as cnt_data from adminrequests where flag=0 and roletype='teacher'");
-    $teacherrequests =  DB::select("SELECT * from adminrequests where flag=0 and roletype='teacher'");
+    $countstud= DB::select("SELECT COUNT(*) as cnt_data from users where flag=0 and role='student'");
+    $studentrequests =  DB::select("SELECT * from users where flag=0 and role='student'");
+    $countteacher= DB::select("SELECT COUNT(*) as cnt_data from users where flag=0 and role='teacher'");
+    $teacherrequests =  DB::select("SELECT * from users where flag=0 and role='teacher'");
  }
  
    
@@ -34,19 +34,19 @@
       {{$errors->first()}}
     </div>
     @endif
-    @if(Auth::user()->roletype=='admin')
+    @if(Auth::user()->role=='admin')
     
     
     @include('admin.admindashboard')
   
-    @elseif(Auth::user()->roletype=='student')
+    @elseif(Auth::user()->role=='student')
     
         
     @include('student.studentdashboard')
 
 
 
-@elseif(Auth::user()->roletype=='teacher')
+@elseif(Auth::user()->role=='teacher')
 
 @include('teacher.teacherdashboard')
     @endif

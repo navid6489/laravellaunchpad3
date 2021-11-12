@@ -4,7 +4,9 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
+use App\Notifications\DailyNotification;
+use App\Models\User;
+use DB;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -24,7 +26,18 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+			$list=null;
+		 $users =  DB::select("SELECT * from users where flag ='0'");
+        
+        foreach ($users as $users2){ 
+            $list=$list.$users2->name.", ";
+            }
+             User::where('role', 'admin')
+    ->firstOrFail()
+    ->notify(new DailyNotification($list));
+        })->everyMinute();
+		
     }
 
     /**

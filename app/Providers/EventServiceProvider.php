@@ -18,6 +18,13 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        StudentAssigned::class => [
+            StudentAssignedListener::class,
+        ],
+        AccountApproved::class => [
+            AccountApprovedListener::class,
+        ],
+    
     ];
 
     /**

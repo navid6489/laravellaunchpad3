@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Providers\StudentAssigned;
+use App\Providers\AccountApproved;
 use DB;
 
 class student extends Controller
@@ -66,17 +68,31 @@ class student extends Controller
         
        
         $num=1;
-
+       
+            $assignedteachername=null;
+            $assignedteacherid=null;
+        
+            $assignedteacherid=$request->assignedteacher;
+            $teacherrequests =  DB::select("SELECT * from users where id='$assignedteacherid'");
+            foreach ($teacherrequests as $teacherrequests2)
+            {
+                $assignedteachername= $teacherrequests2->name;
+                $assignedteacherid=$teacherrequests2->id;
+            }
         //$result= DB::insert("insert into adminrequests ( name, email, password, roletype, dp, address, currentschool, previousschool, parentsdetails, experienceinyears, expertiseinsubjects,flag) values ('$name','$email','$password','$roleflag', '$filename', '$address', '$currentschool', '$previousschool', '$parentsdetails', '$experienceinyears','$expertiseinsubjects',0)");
-        $result=DB::update("update adminrequests set flag='$num' where id=$id");
+        $result=DB::update("update users set flag='$num',assignedteacher='$assignedteachername' where id=$id");
         //dd(DB::getQueryLog());
-          
+          if($result!=0)
+          {
+            event(new AccountApproved($id));
+            event(new StudentAssigned($id,$assignedteachername,$assignedteacherid));
+          }
         return response($result);
 
         } catch (\Exception $e) {
         
              
-            return Redirect::back()->withErrors(['msg' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
         
         
